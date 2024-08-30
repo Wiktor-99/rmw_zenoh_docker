@@ -5,8 +5,11 @@ services:
         dockerfile: docker/Dockerfile
     network_mode: host
     ipc: host
+    volumes:
+      - ./config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5:/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
     environment:
         - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+        - ZENOH_ROUTER_CONFIG_URI=/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
     command: >
       ros2 run rmw_zenoh_cpp rmw_zenohd
 
