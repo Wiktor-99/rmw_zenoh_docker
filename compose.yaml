@@ -10,3 +10,25 @@ services:
     command: >
       ros2 run rmw_zenoh_cpp rmw_zenohd
 
+  talker:
+    build:
+        context: ./
+        dockerfile: docker/Dockerfile
+    network_mode: host
+    ipc: host
+    environment:
+        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    command: >
+      ros2 run demo_nodes_cpp talker
+
+  listener:
+    build:
+        context: ./
+        dockerfile: docker/Dockerfile
+    network_mode: host
+    ipc: host
+    environment:
+        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    command: >
+      ros2 run demo_nodes_cpp listener
+
