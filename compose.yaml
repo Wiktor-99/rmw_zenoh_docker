@@ -1,0 +1,12 @@
+services:
+  zenoh_router:
+    build:
+        context: ./
+        dockerfile: docker/Dockerfile
+    network_mode: host
+    ipc: host
+    environment:
+        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    command: >
+      ros2 run rmw_zenoh_cpp rmw_zenohd
+
