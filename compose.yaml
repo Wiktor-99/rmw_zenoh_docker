@@ -1,15 +1,22 @@
+
+x-common-config:
+  &common-config
+  network_mode: host
+  ipc: host
+  environment:
+        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+
 services:
   zenoh_router:
     build:
         context: ./
         dockerfile: docker/Dockerfile
-    network_mode: host
-    ipc: host
+    <<:
+      - *common-config
     volumes:
       - ./config/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5:/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
       - ./config/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5:/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
     environment:
-        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
         - ZENOH_ROUTER_CONFIG_URI=/DEFAULT_RMW_ZENOH_ROUTER_CONFIG.json5
         - ZENOH_SESSION_CONFIG_URI=/DEFAULT_RMW_ZENOH_SESSION_CONFIG.json5
     command: >
@@ -19,10 +26,8 @@ services:
     build:
         context: ./
         dockerfile: docker/Dockerfile
-    network_mode: host
-    ipc: host
-    environment:
-        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    <<:
+      - *common-config
     command: >
       ros2 run demo_nodes_cpp talker
 
@@ -30,10 +35,8 @@ services:
     build:
         context: ./
         dockerfile: docker/Dockerfile
-    network_mode: host
-    ipc: host
-    environment:
-        - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+    <<:
+      - *common-config
     command: >
       ros2 run demo_nodes_cpp listener
 
