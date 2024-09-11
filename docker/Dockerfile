@@ -1,4 +1,4 @@
-FROM osrf/ros:iron-desktop
+FROM ros:iron
 ARG ROS_DISTRO=iron
 ARG USERNAME=ros
 ARG USER_UID=1000
@@ -13,6 +13,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
+RUN apt-get update --fix-missing && \
+    apt-get install -y ros-$ROS_DISTRO-demo-nodes-cpp
+
 RUN mkdir /ws_rmw_zenoh/src -p && \
     cd /ws_rmw_zenoh/src && \
     git clone https://github.com/ros2/rmw_zenoh.git && \
@@ -20,6 +23,11 @@ RUN mkdir /ws_rmw_zenoh/src -p && \
     rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+RUN apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 ENV DEBIAN_FRONTEND=dialog
 
 COPY ./ros_entrypoint.sh /
