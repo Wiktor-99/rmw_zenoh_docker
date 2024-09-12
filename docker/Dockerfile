@@ -1,11 +1,13 @@
-FROM ros:iron
-ARG ROS_DISTRO=iron
+FROM ros:jazzy
+ARG ROS_DISTRO=jazzy
 ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
+
+RUN userdel $(getent passwd 1000 | cut -d: -f1)
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && apt-get update \
